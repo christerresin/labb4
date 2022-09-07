@@ -113,6 +113,15 @@ class TollFeeCalculatorTest {
   }
 
   @Test
+  void checkTollFreeHours() {
+    for (int i = 0; i < mockDates.length; i++) {
+      mockDates[i] = LocalDateTime.parse(mockDateStrings[i], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    }
+    assertEquals(0, TollFeeCalculator.getTollFeePerPassing(mockDates[0]));
+    assertEquals(0, TollFeeCalculator.getTollFeePerPassing(mockDates[4]));
+  }
+
+  @Test
   @DisplayName("Bug found, length for mockDates (dates) was calculated with -1")
   void compareInputArrayAndGeneratedArrayLengths() {
     assertTrue(TollFeeCalculator.allDatesIncluded(mockDateStrings, mockDates));
@@ -120,12 +129,13 @@ class TollFeeCalculatorTest {
   }
 
   @Test
-  void checkTollFreeHours() {
+  @DisplayName("Bug found, intervals logic was returning wrong amounts. The interval value even if passing during free or lower fee hour")
+  void checkOneHourTollFeeInterval() {
     for (int i = 0; i < mockDates.length; i++) {
       mockDates[i] = LocalDateTime.parse(mockDateStrings[i], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
-    assertEquals(0, TollFeeCalculator.getTollFeePerPassing(mockDates[0]));
-    assertEquals(0, TollFeeCalculator.getTollFeePerPassing(mockDates[4]));
+
+    assertEquals(8, TollFeeCalculator.getTotalFeeCost(mockDates));
   }
 
 }

@@ -27,16 +27,17 @@ public class TollFeeCalculator {
 
     public static int getTotalFeeCost(LocalDateTime[] dates) {
         int totalFee = 0;
+        int intervalRate = 0;
         LocalDateTime intervalStart = dates[0];
         for (LocalDateTime date : dates) {
             System.out.println(date.toString());
             long diffInMinutes = intervalStart.until(date, ChronoUnit.MINUTES);
-            if (diffInMinutes > 60) {
-                totalFee += getTollFeePerPassing(date);
+            if (diffInMinutes > 60 && getTollFeePerPassing(date) > 0) {
+                totalFee += Math.max(getTollFeePerPassing(date), intervalRate);
                 intervalStart = date;
+                intervalRate = 0;
             } else {
-                // Math.max should be above
-                totalFee += Math.max(getTollFeePerPassing(date), getTollFeePerPassing(intervalStart));
+                intervalRate = getTollFeePerPassing(date);
             }
         }
         return feeToPay(totalFee);

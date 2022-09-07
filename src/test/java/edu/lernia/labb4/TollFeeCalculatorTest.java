@@ -9,8 +9,10 @@ import java.time.format.DateTimeFormatter;
 
 class TollFeeCalculatorTest {
 
-  String[] mockDateStrings = { "2020-06-30 00:05", "2020-06-30 10:13", "2020-06-30 10:25", "2020-06-30 11:04" };
-  LocalDateTime[] mockDates = new LocalDateTime[mockDateStrings.length - 1];
+  String[] mockDateStrings = { "2020-06-30 00:05", "2020-06-30 10:13", "2020-06-30 10:25", "2020-06-30 11:04",
+      "2020-06-30 18:30" };
+  LocalDateTime[] mockDates = new LocalDateTime[mockDateStrings.length];
+  LocalDateTime[] mockDatesShort = new LocalDateTime[mockDateStrings.length - 1];
 
   @Test
   @DisplayName("Check if total fee amount is returned when below max fee")
@@ -111,11 +113,19 @@ class TollFeeCalculatorTest {
   }
 
   @Test
+  @DisplayName("Bug found, length for mockDates (dates) was calculated with -1")
+  void compareInputArrayAndGeneratedArrayLengths() {
+    assertTrue(TollFeeCalculator.allDatesIncluded(mockDateStrings, mockDates));
+    assertFalse(TollFeeCalculator.allDatesIncluded(mockDateStrings, mockDatesShort));
+  }
+
+  @Test
   void checkTollFreeHours() {
     for (int i = 0; i < mockDates.length; i++) {
       mockDates[i] = LocalDateTime.parse(mockDateStrings[i], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
     assertEquals(0, TollFeeCalculator.getTollFeePerPassing(mockDates[0]));
+    assertEquals(0, TollFeeCalculator.getTollFeePerPassing(mockDates[4]));
   }
 
 }

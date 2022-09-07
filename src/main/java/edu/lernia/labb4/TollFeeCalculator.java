@@ -13,7 +13,9 @@ public class TollFeeCalculator {
         try {
             Scanner sc = new Scanner(new File(inputFile));
             String[] dateStrings = sc.nextLine().split(", ");
-            LocalDateTime[] dates = new LocalDateTime[dateStrings.length - 1];
+            LocalDateTime[] dates = new LocalDateTime[dateStrings.length];
+            // Refactor this? control flow if?
+            allDatesIncluded(dateStrings, dates);
             for (int i = 0; i < dates.length; i++) {
                 dates[i] = LocalDateTime.parse(dateStrings[i], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
             }
@@ -65,6 +67,10 @@ public class TollFeeCalculator {
             return 8;
         else
             return 0;
+    }
+
+    public static boolean allDatesIncluded(String[] datesStrings, LocalDateTime[] dates) {
+        return datesStrings.length == dates.length;
     }
 
     public static boolean rateBetweenEighteenAndEighteenThirty(int hour, int minute) {

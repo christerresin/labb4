@@ -36,6 +36,7 @@ public class TollFeeCalculator {
                 totalFee += Math.max(getTollFeePerPassing(date), getTollFeePerPassing(intervalStart));
             }
         }
+        System.out.println(totalFee);
         return feeToPay(totalFee);
     }
 
@@ -44,15 +45,17 @@ public class TollFeeCalculator {
             return 0;
         int hour = date.getHour();
         int minute = date.getMinute();
-        if (hour == 6 && minute >= 0 && minute <= 29)
+        // System.out.println("hour: " + hour);
+        // System.out.println("minute: " + minute);
+        if (rateBetweenSixAndSixThirty(hour, minute))
             return 8;
-        else if (hour == 6 && minute >= 30 && minute <= 59)
+        else if (rateBetweenSixThirtyAndSeven(hour, minute))
             return 13;
-        else if (hour == 7 && minute >= 0 && minute <= 59)
+        else if (rateBetweenSevenAndEight(hour, minute))
             return 18;
-        else if (hour == 8 && minute >= 0 && minute <= 29)
+        else if (rateBetweenEightAndEightThirty(hour, minute))
             return 13;
-        else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59)
+        else if (rateBetweenEightThirtyAndFifteen(hour, minute))
             return 8;
         else if (hour == 15 && minute >= 0 && minute <= 29)
             return 13;
@@ -64,6 +67,31 @@ public class TollFeeCalculator {
             return 8;
         else
             return 0;
+    }
+
+    public static boolean rateBetweenEightThirtyAndFifteen(int hour, int minute) {
+        if (hour == 8 && minute >= 30 && minute <= 59) {
+            return true;
+        } else if (hour >= 9 && hour <= 14 && minute >= 0 && minute <= 59) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean rateBetweenEightAndEightThirty(int hour, int minute) {
+        return hour == 8 && minute >= 0 && minute <= 29;
+    }
+
+    public static boolean rateBetweenSevenAndEight(int hour, int minute) {
+        return hour == 7 && minute >= 0 && minute <= 59;
+    }
+
+    public static boolean rateBetweenSixThirtyAndSeven(int hour, int minute) {
+        return hour == 6 && minute >= 30 && minute <= 59;
+    }
+
+    public static boolean rateBetweenSixAndSixThirty(int hour, int minute) {
+        return hour == 6 && minute >= 0 && minute <= 29;
     }
 
     public static boolean isTollFreeDate(LocalDateTime date) {

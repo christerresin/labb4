@@ -18,4 +18,53 @@ class TollFeeCalculatorTest {
   void checkAboveMaxFee() {
     assertEquals(60, TollFeeCalculator.feeToPay(75));
   }
+
+  @Test
+  void checkRateBetweenSixAndSixThirty() {
+    assertEquals(false, TollFeeCalculator.rateBetweenSixAndSixThirty(5, 0));
+    assertEquals(true, TollFeeCalculator.rateBetweenSixAndSixThirty(6, 0));
+    assertEquals(true, TollFeeCalculator.rateBetweenSixAndSixThirty(6, 15));
+    assertEquals(true, TollFeeCalculator.rateBetweenSixAndSixThirty(6, 29));
+    assertEquals(false, TollFeeCalculator.rateBetweenSixAndSixThirty(6, 30));
+  }
+
+  @Test
+  void checkRateBetweenSixThirtyAndSeven() {
+    assertEquals(false, TollFeeCalculator.rateBetweenSixThirtyAndSeven(5, 0));
+    assertEquals(true, TollFeeCalculator.rateBetweenSixThirtyAndSeven(6, 30));
+    assertEquals(true, TollFeeCalculator.rateBetweenSixThirtyAndSeven(6, 45));
+    assertEquals(true, TollFeeCalculator.rateBetweenSixThirtyAndSeven(6, 59));
+    assertEquals(false, TollFeeCalculator.rateBetweenSixThirtyAndSeven(7, 30));
+  }
+
+  @Test
+  void checkRateBetweenSevenAndEight() {
+    assertEquals(false, TollFeeCalculator.rateBetweenSevenAndEight(5, 0));
+    assertEquals(true, TollFeeCalculator.rateBetweenSevenAndEight(7, 0));
+    assertEquals(true, TollFeeCalculator.rateBetweenSevenAndEight(7, 45));
+    assertEquals(true, TollFeeCalculator.rateBetweenSevenAndEight(7, 59));
+    assertEquals(false, TollFeeCalculator.rateBetweenSevenAndEight(8, 0));
+  }
+
+  @Test
+  void checkRateBetweenEightAndEightThirty() {
+    assertEquals(false, TollFeeCalculator.rateBetweenEightAndEightThirty(7, 0));
+    assertEquals(true, TollFeeCalculator.rateBetweenEightAndEightThirty(8, 0));
+    assertEquals(true, TollFeeCalculator.rateBetweenEightAndEightThirty(8, 15));
+    assertEquals(true, TollFeeCalculator.rateBetweenEightAndEightThirty(8, 29));
+    assertEquals(false, TollFeeCalculator.rateBetweenEightAndEightThirty(8, 30));
+  }
+
+  @Test
+  void checkRateBetweenEightThirtyAndFifteen() {
+    assertEquals(false, TollFeeCalculator.rateBetweenEightThirtyAndFifteen(8, 29));
+    assertEquals(true, TollFeeCalculator.rateBetweenEightThirtyAndFifteen(8, 30));
+    assertEquals(true, TollFeeCalculator.rateBetweenEightThirtyAndFifteen(8, 45));
+    assertEquals(true, TollFeeCalculator.rateBetweenEightThirtyAndFifteen(8, 59));
+    assertEquals(true, TollFeeCalculator.rateBetweenEightThirtyAndFifteen(10, 22));
+    assertEquals(true, TollFeeCalculator.rateBetweenEightThirtyAndFifteen(14, 22));
+    assertEquals(true, TollFeeCalculator.rateBetweenEightThirtyAndFifteen(14, 59));
+    assertEquals(false, TollFeeCalculator.rateBetweenEightThirtyAndFifteen(15, 30));
+  }
+
 }

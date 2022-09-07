@@ -57,9 +57,9 @@ public class TollFeeCalculator {
             return 13;
         else if (rateBetweenEightThirtyAndFifteen(hour, minute))
             return 8;
-        else if (hour == 15 && minute >= 0 && minute <= 29)
+        else if (rateBetweenFifteenAndFifteenThirty(hour, minute))
             return 13;
-        else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59)
+        else if (rateBetweenFifteenThirtyAndSeventeen(hour, minute))
             return 18;
         else if (hour == 17 && minute >= 0 && minute <= 59)
             return 13;
@@ -67,6 +67,19 @@ public class TollFeeCalculator {
             return 8;
         else
             return 0;
+    }
+
+    public static boolean rateBetweenFifteenThirtyAndSeventeen(int hour, int minute) {
+        if (hour == 15 && minute >= 30 && minute <= 59) {
+            return true;
+        } else if (hour == 16 && minute >= 0 && minute <= 59) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean rateBetweenFifteenAndFifteenThirty(int hour, int minute) {
+        return hour == 15 && minute >= 0 && minute <= 29;
     }
 
     public static boolean rateBetweenEightThirtyAndFifteen(int hour, int minute) {

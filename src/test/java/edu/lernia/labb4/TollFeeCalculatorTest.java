@@ -56,6 +56,7 @@ class TollFeeCalculatorTest {
   }
 
   @Test
+  @DisplayName("Bugg found in erlier logic")
   void checkRateBetweenEightThirtyAndFifteen() {
     assertEquals(false, TollFeeCalculator.rateBetweenEightThirtyAndFifteen(8, 29));
     assertEquals(true, TollFeeCalculator.rateBetweenEightThirtyAndFifteen(8, 30));
@@ -65,6 +66,24 @@ class TollFeeCalculatorTest {
     assertEquals(true, TollFeeCalculator.rateBetweenEightThirtyAndFifteen(14, 22));
     assertEquals(true, TollFeeCalculator.rateBetweenEightThirtyAndFifteen(14, 59));
     assertEquals(false, TollFeeCalculator.rateBetweenEightThirtyAndFifteen(15, 30));
+  }
+
+  @Test
+  void checkRateBetweenFifteenAndFifteenThirty() {
+    assertEquals(false, TollFeeCalculator.rateBetweenFifteenAndFifteenThirty(14, 0));
+    assertEquals(true, TollFeeCalculator.rateBetweenFifteenAndFifteenThirty(15, 0));
+    assertEquals(true, TollFeeCalculator.rateBetweenFifteenAndFifteenThirty(15, 15));
+    assertEquals(true, TollFeeCalculator.rateBetweenFifteenAndFifteenThirty(15, 29));
+    assertEquals(false, TollFeeCalculator.rateBetweenFifteenAndFifteenThirty(15, 30));
+  }
+
+  @Test
+  void checkRateBetweenFifteenThirtyAndSeventeen() {
+    assertEquals(false, TollFeeCalculator.rateBetweenFifteenThirtyAndSeventeen(15, 29));
+    assertEquals(true, TollFeeCalculator.rateBetweenFifteenThirtyAndSeventeen(15, 30));
+    assertEquals(true, TollFeeCalculator.rateBetweenFifteenThirtyAndSeventeen(15, 59));
+    assertEquals(true, TollFeeCalculator.rateBetweenFifteenThirtyAndSeventeen(16, 59));
+    assertEquals(false, TollFeeCalculator.rateBetweenFifteenThirtyAndSeventeen(17, 00));
   }
 
 }

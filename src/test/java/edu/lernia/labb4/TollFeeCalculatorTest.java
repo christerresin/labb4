@@ -12,4 +12,10 @@ class TollFeeCalculatorTest {
   void checkBelowMaxFee() {
     assertEquals(35, TollFeeCalculator.feeToPay(35));
   }
+
+  @Test
+  @DisplayName("Check if max fee amount is return when totalFee is above maxFee")
+  void checkAboveMaxFee() {
+    assertEquals(60, TollFeeCalculator.feeToPay(75));
+  }
 }

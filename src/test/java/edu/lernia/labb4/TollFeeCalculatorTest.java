@@ -1,11 +1,16 @@
 package edu.lernia.labb4;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.DisplayName;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 class TollFeeCalculatorTest {
+
+  String[] mockDateStrings = { "2020-06-30 00:05", "2020-06-30 10:13", "2020-06-30 10:25", "2020-06-30 11:04" };
+  LocalDateTime[] mockDates = new LocalDateTime[mockDateStrings.length - 1];
 
   @Test
   @DisplayName("Check if total fee amount is returned when below max fee")
@@ -78,12 +83,39 @@ class TollFeeCalculatorTest {
   }
 
   @Test
+  @DisplayName("Bug found in logic")
   void checkRateBetweenFifteenThirtyAndSeventeen() {
     assertEquals(false, TollFeeCalculator.rateBetweenFifteenThirtyAndSeventeen(15, 29));
     assertEquals(true, TollFeeCalculator.rateBetweenFifteenThirtyAndSeventeen(15, 30));
     assertEquals(true, TollFeeCalculator.rateBetweenFifteenThirtyAndSeventeen(15, 59));
     assertEquals(true, TollFeeCalculator.rateBetweenFifteenThirtyAndSeventeen(16, 59));
     assertEquals(false, TollFeeCalculator.rateBetweenFifteenThirtyAndSeventeen(17, 00));
+  }
+
+  @Test
+  void checkRateBetweenSeventeenAndEighteen() {
+    assertEquals(false, TollFeeCalculator.rateBetweenSeventeenAndEighteen(16, 59));
+    assertEquals(true, TollFeeCalculator.rateBetweenSeventeenAndEighteen(17, 0));
+    assertEquals(true, TollFeeCalculator.rateBetweenSeventeenAndEighteen(17, 29));
+    assertEquals(true, TollFeeCalculator.rateBetweenSeventeenAndEighteen(17, 59));
+    assertEquals(false, TollFeeCalculator.rateBetweenSeventeenAndEighteen(18, 0));
+  }
+
+  @Test
+  void checkRateBetweenEighteenAndEighteenThirty() {
+    assertEquals(false, TollFeeCalculator.rateBetweenEighteenAndEighteenThirty(17, 59));
+    assertEquals(true, TollFeeCalculator.rateBetweenEighteenAndEighteenThirty(18, 0));
+    assertEquals(true, TollFeeCalculator.rateBetweenEighteenAndEighteenThirty(18, 15));
+    assertEquals(true, TollFeeCalculator.rateBetweenEighteenAndEighteenThirty(18, 29));
+    assertEquals(false, TollFeeCalculator.rateBetweenEighteenAndEighteenThirty(18, 30));
+  }
+
+  @Test
+  void checkTollFreeHours() {
+    for (int i = 0; i < mockDates.length; i++) {
+      mockDates[i] = LocalDateTime.parse(mockDateStrings[i], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    }
+    assertEquals(0, TollFeeCalculator.getTollFeePerPassing(mockDates[0]));
   }
 
 }

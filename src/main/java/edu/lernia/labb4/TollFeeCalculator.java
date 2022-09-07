@@ -33,10 +33,10 @@ public class TollFeeCalculator {
                 totalFee += getTollFeePerPassing(date);
                 intervalStart = date;
             } else {
+                // Math.max should be above
                 totalFee += Math.max(getTollFeePerPassing(date), getTollFeePerPassing(intervalStart));
             }
         }
-        System.out.println(totalFee);
         return feeToPay(totalFee);
     }
 
@@ -45,8 +45,6 @@ public class TollFeeCalculator {
             return 0;
         int hour = date.getHour();
         int minute = date.getMinute();
-        // System.out.println("hour: " + hour);
-        // System.out.println("minute: " + minute);
         if (rateBetweenSixAndSixThirty(hour, minute))
             return 8;
         else if (rateBetweenSixThirtyAndSeven(hour, minute))
@@ -61,12 +59,20 @@ public class TollFeeCalculator {
             return 13;
         else if (rateBetweenFifteenThirtyAndSeventeen(hour, minute))
             return 18;
-        else if (hour == 17 && minute >= 0 && minute <= 59)
+        else if (rateBetweenSeventeenAndEighteen(hour, minute))
             return 13;
-        else if (hour == 18 && minute >= 0 && minute <= 29)
+        else if (rateBetweenEighteenAndEighteenThirty(hour, minute))
             return 8;
         else
             return 0;
+    }
+
+    public static boolean rateBetweenEighteenAndEighteenThirty(int hour, int minute) {
+        return hour == 18 && minute >= 0 && minute <= 29;
+    }
+
+    public static boolean rateBetweenSeventeenAndEighteen(int hour, int minute) {
+        return hour == 17 && minute >= 0 && minute <= 59;
     }
 
     public static boolean rateBetweenFifteenThirtyAndSeventeen(int hour, int minute) {
@@ -112,12 +118,12 @@ public class TollFeeCalculator {
                 || date.getMonth().getValue() == 7;
     }
 
-    public static void main(String[] args) {
-        new TollFeeCalculator("src/test/resources/Lab4.txt");
-    }
-
     public static int feeToPay(int totalFee) {
         int maxFee = 60;
         return Math.min(totalFee, maxFee);
+    }
+
+    public static void main(String[] args) {
+        new TollFeeCalculator("src/test/resources/Lab4.txt");
     }
 }

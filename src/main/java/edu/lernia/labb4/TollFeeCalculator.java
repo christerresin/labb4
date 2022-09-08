@@ -2,7 +2,6 @@ package edu.lernia.labb4;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -11,15 +10,10 @@ import java.util.Scanner;
 public class TollFeeCalculator {
 
     public TollFeeCalculator(String inputFile) {
-        String[] dateStrings = createArrayOfDates(inputFile);
+        String[] dateStrings = createStringArrayOfDates(inputFile);
         LocalDateTime[] dates = new LocalDateTime[dateStrings.length];
-        // Refactor this? control flow if?
-        allDatesIncluded(dateStrings, dates);
-        for (int i = 0; i < dates.length; i++) {
-            dates[i] = LocalDateTime.parse(dateStrings[i], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-        }
+        createLDTArrayOfDates(dateStrings, dates);
         System.out.println("The total fee for the inputfile is " + getTotalFeeCost(dates));
-
     }
 
     public static int getTotalFeeCost(LocalDateTime[] dates) {
@@ -67,20 +61,28 @@ public class TollFeeCalculator {
             return 0;
     }
 
-    public static String[] createArrayOfDates(String inputFile) {
+    public static void createLDTArrayOfDates(String[] dateStrings, LocalDateTime[] dates) {
+        if (isMatchingArrayOfDates(dateStrings, dates)) {
+            for (int i = 0; i < dates.length; i++) {
+                dates[i] = LocalDateTime.parse(dateStrings[i], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+            }
+        }
+    }
+
+    public static String[] createStringArrayOfDates(String inputFile) {
         try (Scanner sc = new Scanner(new File(inputFile))) {
             while (sc.hasNextLine()) {
                 String[] dateStrings = sc.nextLine().split(", ");
                 return dateStrings;
             }
         } catch (FileNotFoundException fnfe) {
-            fnfe.printStackTrace();
+            System.err.println("Could not read file " + new File(inputFile).getAbsolutePath());
         }
         return null;
     }
 
-    public static boolean allDatesIncluded(String[] datesStrings, LocalDateTime[] dates) {
-        return datesStrings.length == dates.length;
+    public static boolean isMatchingArrayOfDates(String[] dateStrings, LocalDateTime[] dates) {
+        return dateStrings.length == dates.length && dateStrings.length > 0 && dates.length > 0;
     }
 
     public static boolean rateBetweenEighteenAndEighteenThirty(int hour, int minute) {

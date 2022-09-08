@@ -125,8 +125,8 @@ class TollFeeCalculatorTest {
   @Test
   @DisplayName("Bug found, length for mockDates (dates) was calculated with -1")
   void compareInputArrayAndGeneratedArrayLengths() {
-    assertTrue(TollFeeCalculator.allDatesIncluded(mockDateStrings, mockDates));
-    assertFalse(TollFeeCalculator.allDatesIncluded(mockDateStrings, mockDatesShort));
+    assertTrue(TollFeeCalculator.isMatchingArrayOfDates(mockDateStrings, mockDates));
+    assertFalse(TollFeeCalculator.isMatchingArrayOfDates(mockDateStrings, mockDatesShort));
   }
 
   @Test

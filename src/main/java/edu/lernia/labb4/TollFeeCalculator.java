@@ -12,7 +12,7 @@ public class TollFeeCalculator {
     public TollFeeCalculator(String inputFile) {
         String[] dateStrings = createStringArrayOfDates(inputFile);
         LocalDateTime[] dates = new LocalDateTime[dateStrings.length];
-        createLDTArrayOfDates(dateStrings, dates);
+        addFormatedDataToDatesArray(dateStrings, dates);
         System.out.println("The total fee for the inputfile is " + getTotalFeeCost(dates));
     }
 
@@ -61,7 +61,7 @@ public class TollFeeCalculator {
             return 0;
     }
 
-    public static void createLDTArrayOfDates(String[] dateStrings, LocalDateTime[] dates) {
+    public static void addFormatedDataToDatesArray(String[] dateStrings, LocalDateTime[] dates) {
         if (isMatchingArrayOfDates(dateStrings, dates)) {
             for (int i = 0; i < dates.length; i++) {
                 dates[i] = LocalDateTime.parse(dateStrings[i], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
@@ -70,6 +70,7 @@ public class TollFeeCalculator {
     }
 
     public static String[] createStringArrayOfDates(String inputFile) {
+        // using try-with-rescourses to now .close() scanner. "Bug" found in org version
         try (Scanner sc = new Scanner(new File(inputFile))) {
             while (sc.hasNextLine()) {
                 String[] dateStrings = sc.nextLine().split(", ");

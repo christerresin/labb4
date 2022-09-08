@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -63,7 +64,7 @@ class TollFeeCalculatorTest {
   }
 
   @Test
-  @DisplayName("Bugg found in erlier logic")
+  @DisplayName("Bug found in erlier logic")
   void checkRateBetweenEightThirtyAndFifteen() {
     assertEquals(false, TollFeeCalculator.rateBetweenEightThirtyAndFifteen(8, 29));
     assertEquals(true, TollFeeCalculator.rateBetweenEightThirtyAndFifteen(8, 30));

@@ -1,6 +1,7 @@
 package edu.lernia.labb4;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -10,19 +11,15 @@ import java.util.Scanner;
 public class TollFeeCalculator {
 
     public TollFeeCalculator(String inputFile) {
-        try {
-            Scanner sc = new Scanner(new File(inputFile));
-            String[] dateStrings = sc.nextLine().split(", ");
-            LocalDateTime[] dates = new LocalDateTime[dateStrings.length];
-            // Refactor this? control flow if?
-            allDatesIncluded(dateStrings, dates);
-            for (int i = 0; i < dates.length; i++) {
-                dates[i] = LocalDateTime.parse(dateStrings[i], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-            }
-            System.out.println("The total fee for the inputfile is " + getTotalFeeCost(dates));
-        } catch (IOException e) {
-            System.err.println("Could not read file " + new File(inputFile).getAbsolutePath());
+        String[] dateStrings = createArrayOfDates(inputFile);
+        LocalDateTime[] dates = new LocalDateTime[dateStrings.length];
+        // Refactor this? control flow if?
+        allDatesIncluded(dateStrings, dates);
+        for (int i = 0; i < dates.length; i++) {
+            dates[i] = LocalDateTime.parse(dateStrings[i], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         }
+        System.out.println("The total fee for the inputfile is " + getTotalFeeCost(dates));
+
     }
 
     public static int getTotalFeeCost(LocalDateTime[] dates) {
@@ -68,6 +65,18 @@ public class TollFeeCalculator {
             return 8;
         else
             return 0;
+    }
+
+    public static String[] createArrayOfDates(String inputFile) {
+        try (Scanner sc = new Scanner(new File(inputFile))) {
+            while (sc.hasNextLine()) {
+                String[] dateStrings = sc.nextLine().split(", ");
+                return dateStrings;
+            }
+        } catch (FileNotFoundException fnfe) {
+            fnfe.printStackTrace();
+        }
+        return null;
     }
 
     public static boolean allDatesIncluded(String[] datesStrings, LocalDateTime[] dates) {

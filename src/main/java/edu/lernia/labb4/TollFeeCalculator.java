@@ -17,6 +17,7 @@ public class TollFeeCalculator {
         // LocalDateTime[] dates = new LocalDateTime[dateStrings.length];
         List<LocalDateTime> dates = new ArrayList<LocalDateTime>(dateStrings.length);
         addFormatedDataToDatesArray(dateStrings, dates);
+        Collections.sort(dates);
         System.out.println("The total fee for the inputfile is " + getTotalFeeCost(dates));
     }
 

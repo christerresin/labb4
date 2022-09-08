@@ -7,13 +7,15 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 class TollFeeCalculatorTest {
 
   String[] mockDateStrings = { "2020-06-30 00:05", "2020-06-30 10:13", "2020-06-30 10:25", "2020-06-30 11:04",
       "2020-06-30 18:30" };
-  LocalDateTime[] mockDates = new LocalDateTime[mockDateStrings.length];
-  LocalDateTime[] mockDatesShort = new LocalDateTime[mockDateStrings.length - 1];
+  List<LocalDateTime> mockDates = new ArrayList<LocalDateTime>(mockDateStrings.length);
+  List<LocalDateTime> mockDatesShort = new ArrayList<LocalDateTime>(mockDateStrings.length - 1);
 
   @Test
   @DisplayName("Check if total fee amount is returned when below max fee")
@@ -115,11 +117,11 @@ class TollFeeCalculatorTest {
 
   @Test
   void checkTollFreeHours() {
-    for (int i = 0; i < mockDates.length; i++) {
-      mockDates[i] = LocalDateTime.parse(mockDateStrings[i], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    for (int i = 0; i < mockDates.size(); i++) {
+      mockDates.set(i, LocalDateTime.parse(mockDateStrings[i], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
     }
-    assertEquals(0, TollFeeCalculator.getTollFeePerPassing(mockDates[0]));
-    assertEquals(0, TollFeeCalculator.getTollFeePerPassing(mockDates[4]));
+    assertEquals(0, TollFeeCalculator.getTollFeePerPassing(mockDates.get(0)));
+    assertEquals(0, TollFeeCalculator.getTollFeePerPassing(mockDates.get(4)));
   }
 
   @Test
@@ -132,8 +134,8 @@ class TollFeeCalculatorTest {
   @Test
   @DisplayName("Bug found, intervals logic was returning wrong amounts. The interval value even if passing during free or lower fee hour")
   void checkOneHourTollFeeInterval() {
-    for (int i = 0; i < mockDates.length; i++) {
-      mockDates[i] = LocalDateTime.parse(mockDateStrings[i], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    for (int i = 0; i < mockDates.size(); i++) {
+      mockDates.set(i, LocalDateTime.parse(mockDateStrings[i], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
     }
 
     assertEquals(8, TollFeeCalculator.getTotalFeeCost(mockDates));

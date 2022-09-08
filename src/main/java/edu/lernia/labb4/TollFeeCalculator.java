@@ -5,21 +5,25 @@ import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 public class TollFeeCalculator {
 
     public TollFeeCalculator(String inputFile) {
         String[] dateStrings = createStringArrayOfDates(inputFile);
-        LocalDateTime[] dates = new LocalDateTime[dateStrings.length];
+        // LocalDateTime[] dates = new LocalDateTime[dateStrings.length];
+        List<LocalDateTime> dates = new ArrayList<LocalDateTime>(dateStrings.length);
         addFormatedDataToDatesArray(dateStrings, dates);
         System.out.println("The total fee for the inputfile is " + getTotalFeeCost(dates));
     }
 
-    public static int getTotalFeeCost(LocalDateTime[] dates) {
+    public static int getTotalFeeCost(List<LocalDateTime> dates) {
         int totalFee = 0;
         int intervalRate = 0;
-        LocalDateTime intervalStart = dates[0];
+        LocalDateTime intervalStart = dates.get(0);
         for (LocalDateTime date : dates) {
             System.out.println(date.toString());
             long diffInMinutes = intervalStart.until(date, ChronoUnit.MINUTES);
@@ -35,8 +39,9 @@ public class TollFeeCalculator {
     }
 
     public static int getTollFeePerPassing(LocalDateTime date) {
-        if (isTollFreeDate(date))
+        if (isTollFreeDate(date)) {
             return 0;
+        }
         int hour = date.getHour();
         int minute = date.getMinute();
         if (rateBetweenSixAndSixThirty(hour, minute))
@@ -61,10 +66,10 @@ public class TollFeeCalculator {
             return 0;
     }
 
-    public static void addFormatedDataToDatesArray(String[] dateStrings, LocalDateTime[] dates) {
-        if (isMatchingArrayOfDates(dateStrings, dates)) {
-            for (int i = 0; i < dates.length; i++) {
-                dates[i] = LocalDateTime.parse(dateStrings[i], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    public static void addFormatedDataToDatesArray(String[] dateStrings, List<LocalDateTime> dates) {
+        if (dateStrings.length > 0) {
+            for (int i = 0; i < dateStrings.length; i++) {
+                dates.add(i, LocalDateTime.parse(dateStrings[i], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
             }
         }
     }
@@ -82,8 +87,8 @@ public class TollFeeCalculator {
         return null;
     }
 
-    public static boolean isMatchingArrayOfDates(String[] dateStrings, LocalDateTime[] dates) {
-        return dateStrings.length == dates.length && dateStrings.length > 0 && dates.length > 0;
+    public static boolean isMatchingArrayOfDates(String[] dateStrings, List<LocalDateTime> dates) {
+        return dateStrings.length == dates.size() && dateStrings.length > 0 && dates.size() > 0;
     }
 
     public static boolean rateBetweenEighteenAndEighteenThirty(int hour, int minute) {
@@ -133,6 +138,10 @@ public class TollFeeCalculator {
     }
 
     public static boolean isTollFreeDate(LocalDateTime date) {
+        /*
+         * System.out.println("DAY: " + date.getDayOfWeek().getValue());
+         * System.out.println("MONTH: " + date.getMonth().getValue());
+         */
         return date.getDayOfWeek().getValue() == 6 || date.getDayOfWeek().getValue() == 7
                 || date.getMonth().getValue() == 7;
     }
@@ -143,6 +152,6 @@ public class TollFeeCalculator {
     }
 
     public static void main(String[] args) {
-        new TollFeeCalculator("src/test/resources/Lab4.txt");
+        new TollFeeCalculator("src/test/resources/Lab5.txt");
     }
 }

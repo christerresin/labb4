@@ -60,15 +60,18 @@ public class TollFeeCalculator {
 
         }
 
-        // System.out.println(indexesOfDates.get(4));
-        System.out.println("ARRAY: " + dailySortedDates.get(0));
-        System.out.println("ARRAY: " + dailySortedDates.get(1));
-        System.out.println("ARRAY: " + dailySortedDates.get(2));
-        System.out.println("ARRAY: " + dailySortedDates.get(3));
-        System.out.println("ARRAY: " + dailySortedDates.get(4));
-        System.out.println("ARRAY: " + dailySortedDates.size());
+        System.out.println(dailySortedDates.size());
+        int totalFeeForInputFile = 0;
 
-        System.out.println("The total fee for the inputfile is " + getTotalFeeCost(dates));
+        for (int i = 0; i < dailySortedDates.size(); i++) {
+            List<LocalDateTime> datesArray = dailySortedDates.get(i);
+            totalFeeForInputFile += getTotalFeeCost(datesArray);
+        }
+
+        System.out.println("The total fee for the inputfile is " + totalFeeForInputFile);
+
+        // System.out.println("The total fee for the inputfile is " +
+        // getTotalFeeCost(dates));
     }
 
     public static int getTotalFeeCost(List<LocalDateTime> dates) {

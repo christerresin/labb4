@@ -88,10 +88,6 @@ public class TollFeeCalculator {
         return null;
     }
 
-    public static boolean isMatchingArrayOfDates(String[] dateStrings, List<LocalDateTime> dates) {
-        return dateStrings.length == dates.size() && dateStrings.length > 0 && dates.size() > 0;
-    }
-
     public static boolean rateBetweenEighteenAndEighteenThirty(int hour, int minute) {
         return hour == 18 && minute >= 0 && minute <= 29;
     }

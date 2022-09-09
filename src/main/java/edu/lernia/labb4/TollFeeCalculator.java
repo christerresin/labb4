@@ -18,6 +18,56 @@ public class TollFeeCalculator {
         List<LocalDateTime> dates = new ArrayList<LocalDateTime>(dateStrings.length);
         addFormatedDataToDatesArray(dateStrings, dates);
         Collections.sort(dates);
+
+        ArrayList<LocalDateTime> innerArrayList = new ArrayList<>();
+        List<List<LocalDateTime>> dailySortedDates = new ArrayList<>();
+
+        int dateCounter = dates.get(0).getDayOfYear();
+        int rowCounter = 0;
+        List<Integer> datesByValue = new ArrayList<>();
+        List<Integer> indexesOfDates = new ArrayList<>();
+
+        dates.stream().forEachOrdered((date) -> {
+            datesByValue.add(date.getDayOfYear());
+        });
+
+        int indexCount = 0;
+
+        for (Integer date : datesByValue) {
+            if (datesByValue.lastIndexOf(date) == 0) {
+                indexesOfDates.add(datesByValue.lastIndexOf(date));
+            }
+
+            if (datesByValue.lastIndexOf(date) != indexCount) {
+                indexesOfDates.add(datesByValue.lastIndexOf(date));
+                indexCount = datesByValue.lastIndexOf(date);
+            }
+        }
+
+        indexCount = 0;
+
+        for (int index : indexesOfDates) {
+            if (index == indexCount) {
+                System.out.println("INDEX: " + index + " - indexCount: " + indexCount);
+                dailySortedDates.add(dates.subList(index, index + 1));
+                indexCount++;
+            } else {
+                System.out.println("INDEX: " + index + " - indexCount: " + indexCount);
+                dailySortedDates.add(dates.subList(indexCount, index + 1));
+                indexCount = index + 1;
+
+            }
+
+        }
+
+        // System.out.println(indexesOfDates.get(4));
+        System.out.println("ARRAY: " + dailySortedDates.get(0));
+        System.out.println("ARRAY: " + dailySortedDates.get(1));
+        System.out.println("ARRAY: " + dailySortedDates.get(2));
+        System.out.println("ARRAY: " + dailySortedDates.get(3));
+        System.out.println("ARRAY: " + dailySortedDates.get(4));
+        System.out.println("ARRAY: " + dailySortedDates.size());
+
         System.out.println("The total fee for the inputfile is " + getTotalFeeCost(dates));
     }
 
@@ -36,7 +86,7 @@ public class TollFeeCalculator {
                 intervalRate = getTollFeePerPassing(date);
             }
         }
-        return feeToPay(totalFee);
+        return dailyFeeToPay(totalFee);
     }
 
     public static int getTollFeePerPassing(LocalDateTime date) {
@@ -135,15 +185,11 @@ public class TollFeeCalculator {
     }
 
     public static boolean isTollFreeDate(LocalDateTime date) {
-        /*
-         * System.out.println("DAY: " + date.getDayOfWeek().getValue());
-         * System.out.println("MONTH: " + date.getMonth().getValue());
-         */
         return date.getDayOfWeek().getValue() == 6 || date.getDayOfWeek().getValue() == 7
                 || date.getMonth().getValue() == 7;
     }
 
-    public static int feeToPay(int totalFee) {
+    public static int dailyFeeToPay(int totalFee) {
         int maxFee = 60;
         return Math.min(totalFee, maxFee);
     }

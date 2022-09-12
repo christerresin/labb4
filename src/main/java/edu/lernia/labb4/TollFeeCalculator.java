@@ -48,11 +48,9 @@ public class TollFeeCalculator {
 
         for (int index : indexesOfDates) {
             if (index == indexCount) {
-                System.out.println("INDEX: " + index + " - indexCount: " + indexCount);
                 dailySortedDates.add(dates.subList(index, index + 1));
                 indexCount++;
             } else {
-                System.out.println("INDEX: " + index + " - indexCount: " + indexCount);
                 dailySortedDates.add(dates.subList(indexCount, index + 1));
                 indexCount = index + 1;
 
@@ -60,18 +58,16 @@ public class TollFeeCalculator {
 
         }
 
-        System.out.println(dailySortedDates.size());
         int totalFeeForInputFile = 0;
 
         for (int i = 0; i < dailySortedDates.size(); i++) {
             List<LocalDateTime> datesArray = dailySortedDates.get(i);
             totalFeeForInputFile += getTotalFeeCost(datesArray);
+            System.out.println("Added " + getTotalFeeCost(datesArray) + " to total Sum");
         }
 
         System.out.println("The total fee for the inputfile is " + totalFeeForInputFile);
 
-        // System.out.println("The total fee for the inputfile is " +
-        // getTotalFeeCost(dates));
     }
 
     public static int getTotalFeeCost(List<LocalDateTime> dates) {
@@ -79,8 +75,12 @@ public class TollFeeCalculator {
         int intervalRate = 0;
         LocalDateTime intervalStart = dates.get(0);
         for (LocalDateTime date : dates) {
-            System.out.println(date.toString());
+            // System.out.println(date.toString());
             long diffInMinutes = intervalStart.until(date, ChronoUnit.MINUTES);
+            if (intervalStart == date) {
+                totalFee += getTollFeePerPassing(date);
+                intervalRate = getTollFeePerPassing(date);
+            }
             if (diffInMinutes > 60 && getTollFeePerPassing(date) > 0) {
                 totalFee += Math.max(getTollFeePerPassing(date), intervalRate);
                 intervalStart = date;
